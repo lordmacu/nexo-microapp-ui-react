@@ -1,0 +1,112 @@
+/*
+ * @lordmacu/nexo-microapp-ui-react — theme system (Phase 83.13.theme).
+ *
+ * Single CSS file shipping 22 design tokens as CSS custom properties
+ * under the `--nexo-microapp-*` prefix. Default theme is light;
+ * `[data-theme="dark"]` activates the dark override block.
+ *
+ * Consumer wires the theme by:
+ *   1. `import "@lordmacu/nexo-microapp-ui-react/styles.css";`
+ *      at the entry CSS, BEFORE app-specific overrides (otherwise
+ *      cascade favours lib defaults and operator overrides go ignored).
+ *   2. (Optional) Tailwind users add the lib's preset to map utility
+ *      classes (`bg-accent`, `text-text-primary`, …) onto these vars:
+ *
+ *        // tailwind.config.ts
+ *        presets: [require("@lordmacu/nexo-microapp-ui-react/tailwind.preset")],
+ *
+ *   3. (Optional) Toggle dark mode by setting the attribute anywhere
+ *      on the ancestor chain (typically `<html>` or `<body>`):
+ *
+ *        document.documentElement.dataset.theme = "dark";
+ *
+ *   4. (Optional) Override individual tokens by re-defining them
+ *      AFTER importing this file:
+ *
+ *        :root { --nexo-microapp-accent: #25D366; }
+ *
+ * The default values mirror agent-creator-microapp/frontend's
+ * Tailwind tokens 1:1 so visual parity is preserved during migration.
+ */
+
+:root {
+  /* Surfaces — flat backgrounds, ordered light → emphasis. */
+  --nexo-microapp-surface: #f8fafc;        /* slate-50  — root canvas */
+  --nexo-microapp-panel: #ffffff;          /* pure white — cards, conversation pane */
+  --nexo-microapp-panel-alt: #f1f5f9;      /* slate-100 — secondary panel (sidebar) */
+  --nexo-microapp-panel-hover: #f8fafc;    /* slate-50  — list-item hover */
+
+  /* Borders / separators. */
+  --nexo-microapp-border: #e2e8f0;         /* slate-200 — dividers, card borders */
+  --nexo-microapp-border-strong: #cbd5e1;  /* slate-300 — input borders */
+
+  /* Brand accent — primary action color. */
+  --nexo-microapp-accent: #4f46e5;         /* indigo-600 */
+  --nexo-microapp-accent-hover: #4338ca;   /* indigo-700 */
+  --nexo-microapp-accent-soft: #e0e7ff;    /* indigo-100 — soft pill / hover bg */
+
+  /* Text — three-tier contrast for hierarchy. */
+  --nexo-microapp-text-primary: #0f172a;   /* slate-900 — body text */
+  --nexo-microapp-text-secondary: #475569; /* slate-600 — meta-row, supporting copy */
+  --nexo-microapp-text-meta: #94a3b8;      /* slate-400 — timestamps, hints, disabled */
+
+  /* Conversation bubbles — incoming neutral, outgoing accented. */
+  --nexo-microapp-bubble-in: #ffffff;      /* matches panel */
+  --nexo-microapp-bubble-out: #e0f2fe;     /* sky-100 — calm outgoing fill */
+
+  /* Status semantics — pair `*-soft` (bg) with un-suffixed (text/icon). */
+  --nexo-microapp-success: #10b981;        /* emerald-500 */
+  --nexo-microapp-success-soft: #d1fae5;   /* emerald-100 */
+  --nexo-microapp-warning: #f59e0b;        /* amber-500 */
+  --nexo-microapp-warning-soft: #fef3c7;   /* amber-100 */
+  --nexo-microapp-danger: #ef4444;         /* red-500 */
+  --nexo-microapp-danger-soft: #fee2e2;    /* red-100 */
+  --nexo-microapp-info: #0ea5e9;           /* sky-500 */
+  --nexo-microapp-info-soft: #e0f2fe;      /* sky-100 */
+}
+
+/*
+ * Dark mode override. Activated by setting the `data-theme="dark"`
+ * attribute on any ancestor element (typically `<html>` or `<body>`).
+ * Operator can opt-into auto-detect by adding their own
+ * `@media (prefers-color-scheme: dark)` override on top of this block;
+ * the lib does NOT auto-detect to keep the toggle explicit.
+ *
+ * Status colors stay perceptually similar in dark — semantic intent
+ * over exact hue match (success = emerald-ish, warning = amber-ish, …).
+ */
+[data-theme="dark"] {
+  /* Surfaces — slate-900 / slate-800 family for layered depth. */
+  --nexo-microapp-surface: #0f172a;        /* slate-900 */
+  --nexo-microapp-panel: #1e293b;          /* slate-800 */
+  --nexo-microapp-panel-alt: #0f172a;      /* slate-900 */
+  --nexo-microapp-panel-hover: #334155;    /* slate-700 */
+
+  /* Borders / separators. */
+  --nexo-microapp-border: #334155;         /* slate-700 */
+  --nexo-microapp-border-strong: #475569;  /* slate-600 */
+
+  /* Brand accent — desaturated indigo for dark contrast. */
+  --nexo-microapp-accent: #818cf8;         /* indigo-400 */
+  --nexo-microapp-accent-hover: #a5b4fc;   /* indigo-300 */
+  --nexo-microapp-accent-soft: #312e81;    /* indigo-900 */
+
+  /* Text — inverted contrast tier. */
+  --nexo-microapp-text-primary: #f1f5f9;   /* slate-100 */
+  --nexo-microapp-text-secondary: #cbd5e1; /* slate-300 */
+  --nexo-microapp-text-meta: #64748b;      /* slate-500 */
+
+  /* Conversation bubbles. */
+  --nexo-microapp-bubble-in: #1e293b;      /* matches panel (incoming) */
+  --nexo-microapp-bubble-out: #1e3a5f;     /* deeper sky for outgoing */
+
+  /* Status colors — preserved hue, dark-friendly luminance. */
+  --nexo-microapp-success: #34d399;        /* emerald-400 */
+  --nexo-microapp-success-soft: #064e3b;   /* emerald-900 */
+  --nexo-microapp-warning: #fbbf24;        /* amber-400 */
+  --nexo-microapp-warning-soft: #78350f;   /* amber-900 */
+  --nexo-microapp-danger: #f87171;         /* red-400 */
+  --nexo-microapp-danger-soft: #7f1d1d;    /* red-900 */
+  --nexo-microapp-info: #38bdf8;           /* sky-400 */
+  --nexo-microapp-info-soft: #0c4a6e;      /* sky-900 */
+}

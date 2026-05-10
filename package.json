@@ -1,6 +1,6 @@
 {
   "name": "@lordmacu/nexo-microapp-ui-react",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "WhatsApp Web-inspired React component library for Nexo agent microapps. OPT-IN chat helper, NOT core framework.",
   "type": "module",
   "main": "./src/index.ts",
@@ -9,10 +9,13 @@
     ".": {
       "types": "./src/index.ts",
       "default": "./src/index.ts"
-    }
+    },
+    "./styles.css": "./src/styles.css",
+    "./tailwind.preset": "./tailwind.preset.js"
   },
   "files": [
     "src/",
+    "tailwind.preset.js",
     "README.md",
     "CHANGELOG.md",
     "LICENSE"

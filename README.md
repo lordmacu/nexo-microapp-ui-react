@@ -66,30 +66,101 @@ function MyEmptyChat() {
 }
 ```
 
-## Tailwind config requirement
+## Theming (v0.1.0+)
 
-The library ships utility-class strings inline (`bg-accent`,
-`text-text-primary`, `rounded-2xl`, etc.). Your consumer app's
-`tailwind.config.js` must scan this package's source so those classes
-land in the compiled CSS:
+The lib ships a CSS-vars based theme system + an opt-in Tailwind
+preset. Wire it in two steps:
 
-```js
-// tailwind.config.js (consumer)
+### 1. Import the CSS
+
+In your app's entry CSS (typically loaded once at boot):
+
+```css
+/* src/styles/index.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Lib theme — declares 22 CSS vars under `--nexo-microapp-*`. */
+@import "@lordmacu/nexo-microapp-ui-react/styles.css";
+
+/* Your app's overrides go AFTER the lib import so cascade favours
+   them. */
+:root {
+  /* Override single tokens to taste — only the ones you want
+     different from the default. */
+  --nexo-microapp-accent: #25D366;       /* WhatsApp green */
+  --nexo-microapp-accent-hover: #1DA851;
+}
+```
+
+### 2. (Tailwind users) wire the preset
+
+```ts
+// tailwind.config.ts
+import { type Config } from "tailwindcss";
+
 export default {
+  presets: [require("@lordmacu/nexo-microapp-ui-react/tailwind.preset")],
   content: [
     "./index.html",
     "./src/**/*.{ts,tsx}",
     "./node_modules/@lordmacu/nexo-microapp-ui-react/src/**/*.{ts,tsx}",
   ],
-  // ... your theme + plugins ...
-};
+  // ... your own theme.extend additions go here ...
+} satisfies Config;
 ```
 
-Color tokens (`accent`, `accent-hover`, `accent-soft`, `panel`,
-`panel-alt`, `text-primary`, `text-secondary`, `text-meta`, `surface`,
-`danger`) must be defined in your consumer's Tailwind theme. The lib
-does not ship a theme of its own in v0.0.1 — see Phase 83.13.theme
-follow-up for a default theme + CSS-var override system.
+The preset maps utility classes (`bg-accent`, `text-text-primary`,
+`bg-panel-alt`, …) onto the CSS vars — so flipping
+`<html data-theme="dark">` immediately re-themes every lib component
+AND any consumer-side surface that uses these classes.
+
+### 3. Dark mode toggle
+
+```ts
+// Your settings UI / boot logic:
+document.documentElement.dataset.theme = "dark";   // enable
+delete document.documentElement.dataset.theme;     // disable
+```
+
+Or auto-detect once at boot (operator-side opt-in; the lib does NOT
+auto-detect):
+
+```ts
+if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+  document.documentElement.dataset.theme = "dark";
+}
+```
+
+### 4. Tokens reference
+
+22 tokens, all prefixed `--nexo-microapp-*`:
+
+| Group   | Tokens                                                                |
+|---------|-----------------------------------------------------------------------|
+| Surfaces| `surface`, `panel`, `panel-alt`, `panel-hover`                        |
+| Borders | `border`, `border-strong`                                             |
+| Accent  | `accent`, `accent-hover`, `accent-soft`                               |
+| Text    | `text-primary`, `text-secondary`, `text-meta`                         |
+| Bubbles | `bubble-in`, `bubble-out`                                             |
+| Status  | `success`/`-soft`, `warning`/`-soft`, `danger`/`-soft`, `info`/`-soft`|
+
+Default theme mirrors agent-creator-microapp's Tailwind palette
+1:1 (slate + indigo). Dark theme uses inverted slate ranges with
+desaturated indigo accent.
+
+### Consumer without Tailwind
+
+Lib's components use named Tailwind classes (e.g. `bg-accent`).
+Without the preset, those classes don't resolve. Two options:
+
+1. (Recommended) Adopt Tailwind 3.0+ and use the preset.
+2. Override every class manually via Tailwind 3.0+ arbitrary value
+   syntax: `bg-[var(--nexo-microapp-accent)]`. Requires editing
+   each component's source — out of scope.
+
+Tailwind 3.0+ JIT mode is required (default in v3.0+).
 
 ## Architecture
 

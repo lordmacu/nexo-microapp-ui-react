@@ -2,6 +2,48 @@
 
 All notable changes to `@lordmacu/nexo-microapp-ui-react` are documented here.
 
+## [0.1.0] — 2026-05-10
+
+### Added (theme system — Phase 83.13.theme)
+
+- **`src/styles.css`** — single CSS file declaring 22 design tokens
+  as `--nexo-microapp-*` CSS custom properties. Default theme is
+  light; activating `[data-theme="dark"]` flips every token in
+  one cascade pass. Default values mirror
+  agent-creator-microapp/frontend's Tailwind tokens 1:1 (slate +
+  indigo) so visual parity is preserved during migration.
+- **`tailwind.preset.js`** — opt-in Tailwind preset that maps
+  utility-class tokens (`bg-accent`, `text-text-primary`,
+  `bg-panel-alt`, …) onto the CSS vars. Consumer adds via
+  `presets: [require("@lordmacu/nexo-microapp-ui-react/tailwind.preset")]`
+  in their `tailwind.config.ts`.
+- **`exports` map** — `./styles.css` and `./tailwind.preset` entries
+  added so consumers can import both via the package name.
+
+### Theming pattern
+
+Lib ships defaults; operators override individual tokens by
+re-declaring them after importing `styles.css`. Cascade does the
+work — no theme JS API, no runtime selector. Dark mode is an
+attribute toggle on `<html>` or `<body>`.
+
+### Migration from 0.0.1
+
+- Consumer adds `@import "@lordmacu/nexo-microapp-ui-react/styles.css";`
+  to entry CSS.
+- Consumer adds the preset to `tailwind.config.ts` (replaces local
+  hex token definitions).
+- Visual identical because preset values match the previously
+  required hand-defined tokens.
+
+### Out of scope (still deferred)
+
+- Daltonized themes (color-blind accessibility variants).
+- `prefers-color-scheme` auto-detect helper (operators wire their
+  own opt-in for now).
+- Multi-theme palettes beyond `default` + `dark`.
+- Storybook + Playwright tests.
+
 ## [0.0.1] — 2026-05-10
 
 ### Added
